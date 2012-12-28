@@ -8,10 +8,11 @@
 	var table 		= document.getElementById('issuetable');
 	var forEach 	= Array.prototype.forEach;
 	var config		= {
-			recipient	: 'officepel@eckert-caine.com',
+			recipient	: 'report@email.com',
 			subject		: 'Daily Report',
 			msgStart	: getRandomMessageStart(),
-			msgEnd		: getRandomMessageEnd()
+			msgEnd		: getRandomMessageEnd(),
+			columns		: ['issuetype', 'assignee', 'reporter', 'created', 'updated', 'duedate']
 		};
 
 
@@ -21,16 +22,13 @@
 		}
 
 		clearContent();
-		removeColumns(['issuetype', 'assignee', 'reporter', 'created', 'updated', 'duedate']);
+		removeColumns(config.columns);
 		generateEmail();
 	}
 
 
 	function removeColumns (columns) {
-		var cells
-		, 	len = columns.length;
-
-		for (i = 0; i < len; i++) {
+		for (var i = 0, len = columns.length; i < len; i++) {
 			removeColumnNodes(document.querySelectorAll('.' + columns[i]));
 			removeColumnNodes(document.querySelectorAll('.headerrow-' + columns[i]));
 		}
@@ -47,9 +45,7 @@
 
 
 	function nodeListToArray (nodeCells) {
-		var cells = [];
-		
-		for (var j = nodeCells.length; j--; cells.unshift(nodeCells[j]));
+		for (var j = nodeCells.length, cells = []; j--; cells.unshift(nodeCells[j]));
 		
 		return cells;	
 	}
