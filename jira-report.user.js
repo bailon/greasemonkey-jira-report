@@ -1,96 +1,95 @@
 // ==UserScript==
-// @name			Jira - Daily Report
-// @description		Generates an email with the tasks worked in the day
-// @exclude			*
+// @name         Jira - Daily Report
+// @description  Generates an email with the tasks worked in the day
+// @exclude      *
 // ==/UserScript==
 
 (function () {
-	var table 		= document.getElementById('issuetable');
-	var forEach 	= Array.prototype.forEach;
-	var config		= {
-			recipient	: 'report@email.com',
-			subject		: 'Daily Report',
-			msgStart	: getRandomMessageStart(),
-			msgEnd		: getRandomMessageEnd(),
-			columns		: ['issuetype', 'assignee', 'reporter', 'created', 'updated', 'duedate']
-		};
+    var table = document.getElementById('issuetable');
+    var forEach = Array.prototype.forEach;
+    var config = {
+        recipient: 'report@email.com',
+        subject: 'Daily Report',
+        msgStart: getRandomMessageStart(),
+        msgEnd: getRandomMessageEnd(),
+        columns: ['issuetype', 'assignee', 'reporter', 'created', 'updated', 'duedate']
+    };
 
 
-	function report () {
-		if (!document.getElementById('issuetable')) {
-			return;
-		}
+    function report () {
+        if (!document.getElementById('issuetable')) {
+            return;
+        }
 
-		clearContent();
-		removeColumns(config.columns);
-		generateEmail();
-	}
-
-
-	function removeColumns (columns) {
-		for (var i = 0, len = columns.length; i < len; i++) {
-			removeColumnNodes(document.querySelectorAll('.' + columns[i]));
-			removeColumnNodes(document.querySelectorAll('.headerrow-' + columns[i]));
-		}
-	}
+        clearContent();
+        removeColumns(config.columns);
+        generateEmail();
+    }
 
 
-	function removeColumnNodes (nodeCells) {
-		var cells = nodeListToArray(nodeCells);
-			
-		cells.forEach(function (cell) {
-			cell.parentNode.removeChild(cell);
-		});
-	}
+    function removeColumns (columns) {
+        for (var i = 0, len = columns.length; i < len; i++) {
+            removeColumnNodes(document.querySelectorAll('.' + columns[i]));
+            removeColumnNodes(document.querySelectorAll('.headerrow-' + columns[i]));
+        }
+    }
 
 
-	function nodeListToArray (nodeCells) {
-		for (var j = nodeCells.length, cells = []; j--; cells.unshift(nodeCells[j]));
-		
-		return cells;	
-	}
+    function removeColumnNodes (nodeCells) {
+        var cells = nodeListToArray(nodeCells);
+
+        cells.forEach(function (cell) {
+            cell.parentNode.removeChild(cell);
+        });
+    }
 
 
-	function clearContent () {
-		var content;
+    function nodeListToArray (nodeCells) {
+        for (var j = nodeCells.length, cells = []; j--; cells.unshift(nodeCells[j]));
 
-		// information table
-		content = document.querySelectorAll('.result-header');
-		content[0].parentNode.removeChild(content[0]);
-
-		// previous button
-		content = document.querySelectorAll('#previous-view');
-		content[0].parentNode.removeChild(content[0]);
-	}
-
-	
-	function generateEmail () {
-		var mail = 'mailto:' + config.recipient + '?subject=' + config.subject + '&body=' + getMessageBody();
-
-		// maybe use some parser to generate it in plain/text format
-
-		window.location = mail;
-	}
+        return cells;
+    }
 
 
-	function getMessageBody () {
-		return config.msgStart + '\n\n\n' + config.msgEnd;
-	}
+    function clearContent () {
+        var content;
+
+        // information table
+        content = document.querySelectorAll('.result-header');
+        content[0].parentNode.removeChild(content[0]);
+
+        // previous button
+        content = document.querySelectorAll('#previous-view');
+        content[0].parentNode.removeChild(content[0]);
+    }
 
 
-	function getRandomMessageStart () {
-		return 'Hey guys';
-	}
+    function generateEmail () {
+        var mail = 'mailto:' + config.recipient + '?subject=' + config.subject + '&body=' + getMessageBody();
+
+        // maybe use some parser to generate it in plain/text format
+        window.location = mail;
+    }
 
 
-	function getRandomMessageEnd () {
-		var msg = ['Best regards.', 'Kind regards.','Gracias!'];
-		
-		return msg[Math.floor(Math.random() * msg.length)];
-	}
+    function getMessageBody () {
+        return config.msgStart + '\n\n\n' + config.msgEnd;
+    }
 
 
-	window.addEventListener("load", function(e) {
-		report();
-	}, false);
-})()
+    function getRandomMessageStart () {
+        return 'Hey guys';
+    }
+
+
+    function getRandomMessageEnd () {
+        var msg = ['Best regards.', 'Kind regards.','Gracias!'];
+
+        return msg[Math.floor(Math.random() * msg.length)];
+    }
+
+
+    window.addEventListener("load", function(e) {
+        report();
+    }, false);
+})();
